@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">dragonball</string>
+    <string name="app_name">DragonBall</string>
+    <string name="dragonball_app">DragonBall App</string>
+    <string name="insert_user">username</string>
+    <string name="insert_password">password</string>
+    <string name="login">Login</string>
+    <string name="remember_user">Remember me</string>
 </resources>
