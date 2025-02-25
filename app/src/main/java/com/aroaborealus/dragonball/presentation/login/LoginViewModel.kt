@@ -1,8 +1,10 @@
-package com.aroaborealus.dragonball
+package com.aroaborealus.dragonball.presentation.login
 
 import android.content.SharedPreferences
+import androidx.activity.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aroaborealus.dragonball.presentation.home.HomeViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,11 +29,7 @@ class LoginViewModel: ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = State.Loading
             delay(2000L)
-            if(Random.nextBoolean()) {
-                _uiState.value = State.Success("------ token ---------")
-            } else {
-                _uiState.value = State.Error("Error", 401)
-            }
+            _uiState.value = State.Success("------ token ---------")
         }
     }
 

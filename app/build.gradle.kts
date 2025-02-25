@@ -51,4 +51,8 @@ dependencies {
 
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation("androidx.activity:activity-ktx:1.8.0")
+
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.okhttp)
+    implementation(libs.glide)
 }

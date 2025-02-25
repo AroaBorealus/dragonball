@@ -1,4 +1,4 @@
-package com.aroaborealus.dragonball
+package com.aroaborealus.dragonball.presentation.login
 
 import android.os.Bundle
 import android.view.View
@@ -6,18 +6,15 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.button.MaterialButton
 import com.aroaborealus.dragonball.databinding.ActivityLoginBinding
+import com.aroaborealus.dragonball.presentation.home.HomeActivity
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
 
     private val viewModel : LoginViewModel by viewModels()
-    private lateinit var binding : ActivityLoginBinding ///by viewBinding(ActivityLoginBinding::inflate)
+    private lateinit var binding : ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +48,7 @@ class LoginActivity : AppCompatActivity() {
                         // TODO ir a la siguiente pantalla
                         binding.pbLoading.visibility = View.INVISIBLE
                         Toast.makeText(this@LoginActivity, "El token es. ${state.token}", Toast.LENGTH_LONG).show()
-
+                        startHomeActivity(state.token)
                     }
                     is LoginViewModel.State.Error -> {
                         binding.pbLoading.visibility = View.INVISIBLE
@@ -61,5 +58,9 @@ class LoginActivity : AppCompatActivity() {
 
             }
         }
+    }
+
+    private fun startHomeActivity(token: String) {
+        HomeActivity.startJuegoActivity(this, token)
     }
 }

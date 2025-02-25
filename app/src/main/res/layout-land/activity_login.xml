@@ -4,7 +4,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity"
+    tools:context=".presentation.login.LoginActivity"
     android:gravity="center"
     android:background="@mipmap/db_login_landscape"
     android:orientation="horizontal">
