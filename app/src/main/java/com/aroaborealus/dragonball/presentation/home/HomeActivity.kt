@@ -49,30 +49,8 @@ class HomeActivity: AppCompatActivity(),OpcionesJuego {
             Toast.makeText(this, "No hay token. La activity se va a cerrar", Toast.LENGTH_LONG).show()
             finish()
         }
-        //viewModel.getCharactersMock()
+        viewModel.getCharactersMock()
         initFragments()
-    }
-
-    private fun setObservers() {
-        lifecycleScope.launch {
-            viewModel.uiState.collect { state ->
-                when(state){
-                    is HomeViewModel.State.Loading -> {
-                        Log.i("HomeActivity", "State: Loading")
-                    }
-                    is HomeViewModel.State.Success -> {
-                        Log.i("HomeActivity", state.characters[0].toString())
-                    }
-                    is HomeViewModel.State.Error -> {
-                        Toast.makeText(this@HomeActivity, "Ha ocurrido un error. ${state.message} ${state.errorCode}", Toast.LENGTH_LONG).show()
-                    }
-                    is HomeViewModel.State.SelectedCharacter -> {
-
-                    }
-                }
-
-            }
-        }
     }
 
     private fun initFragments() {

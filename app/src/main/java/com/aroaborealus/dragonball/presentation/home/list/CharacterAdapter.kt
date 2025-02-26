@@ -23,6 +23,7 @@ class CharacterAdapter(
         private val binding: ItemCharacterBinding,
         private var onCharacterClciked: (Character) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
+        //Aquí hacer que si su vida es 0 o menos, no sea seleccionable
         fun bind(character: Character) {
             binding.tvNombre.text = character.nombre
             Glide

@@ -42,7 +42,7 @@ class HomeViewModel: ViewModel() {
 
     fun getCharactersMock() {
         _uiState.value = State.Loading
-        _uiState.value = State.Success(listOf(Character("id1234","Meu","asdf.com",100),
+        _uiState.value = State.Success(listOf(Character("id1234","Meu","https://cdn.alfabetajuega.com/alfabetajuega/2020/12/goku1.jpg?width=300",100),
                                               Character("Qwerty1","Miu","foto.com",100)))
     }
 

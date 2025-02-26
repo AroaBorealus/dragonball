@@ -11,16 +11,32 @@
 
     <ImageView
         android:id="@+id/ivPhoto"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_marginEnd="16dp"
         />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="15dp"
+        >
+        <TextView
+            android:id="@+id/tvNombre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Hello World!"
+            android:textSize="18sp"
+            />
+        <ProgressBar
+            android:id="@+id/pbVida"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progressTint="@color/hp"
+            android:progressBackgroundTint="@color/black"
+            tools:progress="50"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvNombre"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Hello World!"
-        android:textSize="18sp"
-        />
 </LinearLayout>
