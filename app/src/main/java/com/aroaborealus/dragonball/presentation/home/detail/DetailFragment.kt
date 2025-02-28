@@ -1,5 +1,6 @@
 package com.aroaborealus.dragonball.presentation.home.detail
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,11 +14,12 @@ import com.aroaborealus.dragonball.model.Character
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class DetailFragment: Fragment() {
+class DetailFragment : Fragment() {
 
     private lateinit var binding: FragmentDetailBinding
     private val viewModel: HomeViewModel by activityViewModels()
     private var job: Job? = null
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,6 +27,9 @@ class DetailFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentDetailBinding.inflate(inflater, container, false)
+
+        sharedPreferences = requireActivity().getSharedPreferences("app_preferences", 0)
+
         initObservers()
         return binding.root
     }
@@ -34,11 +39,11 @@ class DetailFragment: Fragment() {
             tvNombre.text = personaje.nombre
             pbVida.progress = personaje.vidaActual
             bGolpear.setOnClickListener {
-                viewModel.golpearPersonaje(personaje) // TODO falta ue el golpe quite 20 puntos
+                viewModel.golpearPersonaje(personaje, sharedPreferences)
                 pbVida.progress = personaje.vidaActual
             }
             bCurar.setOnClickListener {
-                personaje.vidaActual = personaje.vidaTotal // TODO falta curar 60 puntos
+                viewModel.curarPersonaje(personaje, sharedPreferences)
                 pbVida.progress = personaje.vidaActual
             }
         }
@@ -46,8 +51,8 @@ class DetailFragment: Fragment() {
 
     private fun initObservers() {
         job = lifecycleScope.launch {
-            viewModel.uiState.collect{ state ->
-                when(state){
+            viewModel.uiState.collect { state ->
+                when (state) {
                     is HomeViewModel.State.PersonajeSeleccionado -> {
                         initViews(state.personaje)
                     }
@@ -60,6 +65,6 @@ class DetailFragment: Fragment() {
     override fun onStop() {
         super.onStop()
         job?.cancel()
-        viewModel.personajeDeseleccionado()
+        viewModel.personajeDeseleccionado(sharedPreferences)
     }
 }

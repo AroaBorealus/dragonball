@@ -53,7 +53,7 @@ class UserRepository {
         }
     }
 
-    
+
     fun getToken(): String = token
 
     @VisibleForTesting

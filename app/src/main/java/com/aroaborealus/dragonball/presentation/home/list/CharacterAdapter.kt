@@ -10,7 +10,7 @@ import com.aroaborealus.dragonball.model.Character
 
 class CharacterAdapter(
     private var onPersonajeClicked: (Character) -> Unit,
-): RecyclerView.Adapter<CharacterAdapter.PersonajeViewHolder>() {
+): RecyclerView.Adapter<CharacterAdapter.CharacterViewHolder>() {
 
     private var personajes = listOf<Character>()
 
@@ -19,7 +19,7 @@ class CharacterAdapter(
         notifyDataSetChanged()
     }
 
-    class PersonajeViewHolder(
+    class CharacterViewHolder(
         private val binding: ItemCharacterBinding,
         private var onPersonajeClicked: (Character) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -34,15 +34,34 @@ class CharacterAdapter(
                 .into(binding.ivPhoto)
             binding.pbVida.max = personaje.vidaTotal
             binding.pbVida.progress = personaje.vidaActual
+
+            // Cambiar color de fondo si la vida está por debajo de 0
+            if (personaje.vidaActual <= 0) {
+                // Cambiar el color de fondo a gris
+                binding.root.setBackgroundColor(binding.root.context.getColor(R.color.light_gray))
+                // Deshabilitar la selección
+                binding.root.isClickable = false
+                binding.root.isEnabled = false
+            } else {
+                // Restaurar color de fondo
+                binding.root.setBackgroundColor(binding.root.context.getColor(R.color.light_orange))
+                // Habilitar la selección
+                binding.root.isClickable = true
+                binding.root.isEnabled = true
+            }
+
+            // Manejo del click solo si está habilitado
             binding.root.setOnClickListener {
-                onPersonajeClicked(personaje)
+                if (binding.root.isEnabled) {
+                    onPersonajeClicked(personaje)
+                }
             }
         }
-
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonajeViewHolder {
-        return PersonajeViewHolder(
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
+        return CharacterViewHolder(
             binding = ItemCharacterBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             onPersonajeClicked = onPersonajeClicked,
         )
@@ -52,7 +71,7 @@ class CharacterAdapter(
         return personajes.size
     }
 
-    override fun onBindViewHolder(holder: PersonajeViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
         holder.bind(personajes[position])
     }
 
