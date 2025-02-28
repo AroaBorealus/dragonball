@@ -14,9 +14,7 @@ import androidx.fragment.app.activityViewModels
 import com.aroaborealus.dragonball.presentation.home.OpcionesJuego
 import kotlinx.coroutines.Job
 
-
 class ListFragment: Fragment() {
-
     private val personajesAdapter = CharacterAdapter(
         onPersonajeClicked = { personaje ->
             viewModel.personajeSeleccionado(personaje)
@@ -69,5 +67,4 @@ class ListFragment: Fragment() {
         super.onStop()
         job?.cancel()
     }
-
 }

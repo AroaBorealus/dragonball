@@ -29,7 +29,7 @@ class LoginViewModel: ViewModel() {
     fun iniciarLogin(usuario: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = State.Loading
-            delay(2000L)
+            //delay(2000L)
             val loginResponse = userRepository.login(usuario, password)
             when (loginResponse) {
                 is UserRepository.LoginResponse.Success -> {
