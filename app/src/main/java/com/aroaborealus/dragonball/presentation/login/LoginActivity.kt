@@ -7,8 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.aroaborealus.dragonball.databinding.ActivityLoginBinding
 import com.aroaborealus.dragonball.presentation.home.HomeActivity
+import com.aroaborealus.dragonball.databinding.ActivityLoginBinding
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
@@ -28,6 +28,7 @@ class LoginActivity : AppCompatActivity() {
             password = "1234"
         )
         Toast.makeText(this, "App abierta correctamente", Toast.LENGTH_LONG).show()
+
         binding.bLogin.setOnClickListener {
             viewModel.iniciarLogin(
                 usuario = binding.etUser.text.toString(),
@@ -45,22 +46,21 @@ class LoginActivity : AppCompatActivity() {
                         binding.pbLoading.visibility = View.VISIBLE
                     }
                     is LoginViewModel.State.Success -> {
-                        // TODO ir a la siguiente pantalla
                         binding.pbLoading.visibility = View.INVISIBLE
-                        Toast.makeText(this@LoginActivity, "El token es. ${state.token}", Toast.LENGTH_LONG).show()
-                        startHomeActivity(state.token)
+                        startJuegoActivity()
                     }
                     is LoginViewModel.State.Error -> {
                         binding.pbLoading.visibility = View.INVISIBLE
                         Toast.makeText(this@LoginActivity, "Ha ocurrido un error. ${state.message} ${state.errorCode}", Toast.LENGTH_LONG).show()
                     }
                 }
-
             }
         }
     }
 
-    private fun startHomeActivity(token: String) {
-        HomeActivity.startJuegoActivity(this, token)
+
+    private fun startJuegoActivity() {
+        HomeActivity.startJuegoActivity(this)
+        finish()
     }
 }

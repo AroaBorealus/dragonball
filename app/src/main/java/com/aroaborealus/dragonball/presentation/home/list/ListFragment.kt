@@ -12,18 +12,20 @@ import com.aroaborealus.dragonball.presentation.home.HomeViewModel
 import kotlinx.coroutines.launch
 import androidx.fragment.app.activityViewModels
 import com.aroaborealus.dragonball.presentation.home.OpcionesJuego
+import kotlinx.coroutines.Job
 
 
 class ListFragment: Fragment() {
 
-    private val characterAdapter = CharacterAdapter(
-        onCharacterClicked = { character ->
-            viewModel.selectedCharacter(character)
+    private val personajesAdapter = CharacterAdapter(
+        onPersonajeClicked = { personaje ->
+            viewModel.personajeSeleccionado(personaje)
         }
     )
     private val viewModel: HomeViewModel by activityViewModels()
 
     private lateinit var binding: FragmentListBinding
+    private var job: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,12 +39,12 @@ class ListFragment: Fragment() {
     }
 
     private fun initViews() {
-        binding.rvCharacters.layoutManager = LinearLayoutManager(this.context)
-        binding.rvCharacters.adapter = characterAdapter
+        binding.rvPersonajes.layoutManager = LinearLayoutManager(this.context)
+        binding.rvPersonajes.adapter = personajesAdapter
     }
 
     private fun initObservers() {
-        lifecycleScope.launch {
+        job = lifecycleScope.launch {
             viewModel.uiState.collect{ state ->
                 when(state){
                     is HomeViewModel.State.Loading -> {
@@ -50,17 +52,22 @@ class ListFragment: Fragment() {
                     }
                     is HomeViewModel.State.Success -> {
                         binding.pbLoading.visibility = View.GONE
-                        characterAdapter.updateCharacters(state.characters)
+                        personajesAdapter.actualizarPersonajes(state.personajes)
                     }
                     is HomeViewModel.State.Error -> {
                         binding.pbLoading.visibility = View.GONE
                     }
-                    is HomeViewModel.State.SelectedCharacter -> {
+                    is HomeViewModel.State.PersonajeSeleccionado -> {
                         (activity as? OpcionesJuego)?.irAlDetalle()
                     }
                 }
             }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        job?.cancel()
     }
 
 }

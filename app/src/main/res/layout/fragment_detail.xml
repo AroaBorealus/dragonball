@@ -3,12 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/tvNombre"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        tools:text="Nombre"/>
     <ProgressBar
         android:id="@+id/pbVida"
         android:layout_width="match_parent"
@@ -17,5 +20,18 @@
         android:progressBackgroundTint="@color/black"
         tools:progress="50"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+
+    <Button
+        android:id="@+id/bGolpear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hit"/>
+
+    <Button
+        android:id="@+id/bCurar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/heal"/>
+
 
 </LinearLayout>

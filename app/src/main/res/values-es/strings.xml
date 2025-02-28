@@ -6,4 +6,6 @@
     <string name="insert_password">contraseña</string>
     <string name="login">Entrar</string>
     <string name="remember_user">Recuérdame</string>
+    <string name="hit">Golpear</string>
+    <string name="heal">Curar</string>
 </resources>

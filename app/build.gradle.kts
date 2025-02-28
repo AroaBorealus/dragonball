@@ -58,4 +58,6 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.okhttp)
     implementation(libs.glide)
+    implementation(libs.gson)
+
 }

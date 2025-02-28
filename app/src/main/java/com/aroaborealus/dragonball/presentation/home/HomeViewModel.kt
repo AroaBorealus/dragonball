@@ -1,117 +1,71 @@
 package com.aroaborealus.dragonball.presentation.home
 
+import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import androidx.lifecycle.viewModelScope
+import com.aroaborealus.dragonball.data.repository.CharacterRepository
+import com.aroaborealus.dragonball.data.repository.UserRepository
 import com.aroaborealus.dragonball.model.Character
-import com.aroaborealus.dragonball.presentation.login.LoginViewModel.State
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.FormBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
-import java.io.IOException
+import org.jetbrains.annotations.VisibleForTesting
 
 class HomeViewModel: ViewModel() {
 
-
-    private val BASE_URL = "https://dragonball.keepcoding.education/api/"
-    private var token = ""
-
     sealed class State {
         data object Loading: State()
-        data class Success(val characters: List<Character>): State()
-        data class Error(val message: String, val errorCode: Int) : State()
-        data class SelectedCharacter(val character: Character): State()
+        data class Success(val personajes: List<Character>): State()
+        data class Error(val message: String): State()
+        data class PersonajeSeleccionado(val personaje: Character): State()
     }
 
     private val _uiState = MutableStateFlow<State>(State.Loading)
+    private val personajeRepository = CharacterRepository()
+    @VisibleForTesting
+    val userRepository = UserRepository()
+
     val uiState: StateFlow<State> = _uiState.asStateFlow()
 
-    fun actualizarToken(token: String) {
-        this.token = token
+    fun golpearPersonaje(personaje: Character) {
+        personaje.vidaActual -= 10
     }
 
-    fun selectedCharacter(character: Character) {
-        _uiState.value = State.SelectedCharacter(character)
+    fun personajeSeleccionado(personaje: Character) {
+        personaje.vecesSeleccionado++
+        _uiState.value = State.PersonajeSeleccionado(personaje)
     }
 
-    fun getCharactersMock() {
-        _uiState.value = State.Loading
-        _uiState.value = State.Success(listOf(Character("id1234","Meu","https://cdn.alfabetajuega.com/alfabetajuega/2020/12/goku1.jpg?width=300",100),
-                                              Character("Qwerty1","Miu","foto.com",100)))
-    }
+    fun personajeDeseleccionado() {
+        val resultado = personajeRepository.fetchPersonajes(userRepository.getToken(),)
+        when (resultado) {
+            is CharacterRepository.PersonajesResponse.Success -> {
+                _uiState.value = State.Success(resultado.personajes)
+            }
 
-    fun getCharacters() {
-        viewModelScope.launch {
-            _uiState.value = State.Loading
-
-            var client = OkHttpClient()
-            val url = "${BASE_URL}heros/all"
-
-            val formBody = FormBody.Builder()
-                .add("name", "")
-                .build()
-
-            val request = Request.Builder()
-                .url(url)
-                .post(formBody)
-                .addHeader("Authorization", "Bearer $token")
-                .build()
-
-            val call = client.newCall(request)
-            val response = call.execute()
-
-            if (response.isSuccessful) {
-                // TODO analizar la respuesta que viene en json y pasarlo a lista
-                _uiState.value = State.Success(listOf())
-            } else {
-                _uiState.value = State.Error("Error al descargar los personajes. ${response.message}",
-                                             402)
+            is CharacterRepository.PersonajesResponse.Error -> {
+                _uiState.value = State.Error(resultado.message)
             }
         }
     }
 
-
-    fun descargarPersonajesAlternativo() {
-        viewModelScope.launch {
+    fun descargarPersonajes(sharedPreferences: SharedPreferences) {
+        viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = State.Loading
-
-            var client = OkHttpClient()
-            val url = "${BASE_URL}heros/all"
-
-            val formBody = FormBody.Builder()
-                .add("name", "")
-                .build()
-
-            val request = Request.Builder()
-                .url(url)
-                .post(formBody)
-                .addHeader("Authorization", "Bearer $token")
-                .build()
-
-            val call = client.newCall(request)
-            val response = call.enqueue(
-                object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                        _uiState.value = State.Error("Error",
-                                                     401)
-                    }
-
-                    override fun onResponse(call: Call, response: Response) {
-                        // TODO analizar la respuesta que viene en json y pasarlo a lista
-                        _uiState.value = State.Success(listOf())
-                    }
-
+            val resultado = personajeRepository.fetchPersonajes(userRepository.getToken(), sharedPreferences)
+            when (resultado) {
+                is CharacterRepository.PersonajesResponse.Success -> {
+                    _uiState.value = State.Success(resultado.personajes)
                 }
-            )
 
-
+                is CharacterRepository.PersonajesResponse.Error -> {
+                    _uiState.value = State.Error(resultado.message)
+                }
+            }
         }
     }
+
 
 }

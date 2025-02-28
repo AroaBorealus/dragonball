@@ -18,7 +18,7 @@
         />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvCharacters"
+        android:id="@+id/rvPersonajes"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:itemCount="10"

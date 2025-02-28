@@ -3,53 +3,58 @@ package com.aroaborealus.dragonball.presentation.home.list
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.aroaborealus.dragonball.model.Character
 import com.bumptech.glide.Glide
 import com.aroaborealus.dragonball.R
 import com.aroaborealus.dragonball.databinding.ItemCharacterBinding
+import com.aroaborealus.dragonball.model.Character
 
 class CharacterAdapter(
-    private var onCharacterClicked: (Character) -> Unit,
-): RecyclerView.Adapter<CharacterAdapter.CharacterViewHolder>() {
+    private var onPersonajeClicked: (Character) -> Unit,
+): RecyclerView.Adapter<CharacterAdapter.PersonajeViewHolder>() {
 
-    private var characters = listOf<Character>()
+    private var personajes = listOf<Character>()
 
-    fun updateCharacters(characters: List<Character>) {
-        this.characters = characters
+    fun actualizarPersonajes(personajes: List<Character>) {
+        this.personajes = personajes
         notifyDataSetChanged()
     }
 
-    class CharacterViewHolder(
+    class PersonajeViewHolder(
         private val binding: ItemCharacterBinding,
-        private var onCharacterClciked: (Character) -> Unit,
+        private var onPersonajeClicked: (Character) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
-        //Aquí hacer que si su vida es 0 o menos, no sea seleccionable
-        fun bind(character: Character) {
-            binding.tvNombre.text = character.nombre
+
+        fun bind(personaje: Character) {
+            binding.tvNombre.text = personaje.nombre
             Glide
                 .with(binding.root)
-                .load(character.imagenUrl)
+                .load(personaje.imagenUrl)
                 .centerInside()
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .into(binding.ivPhoto)
+            binding.pbVida.max = personaje.vidaTotal
+            binding.pbVida.progress = personaje.vidaActual
             binding.root.setOnClickListener {
-                onCharacterClciked(character)
+                onPersonajeClicked(personaje)
             }
         }
+
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
-        return CharacterViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonajeViewHolder {
+        return PersonajeViewHolder(
             binding = ItemCharacterBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-            onCharacterClciked = onCharacterClicked,
+            onPersonajeClicked = onPersonajeClicked,
         )
     }
 
     override fun getItemCount(): Int {
-        return characters.size
+        return personajes.size
     }
 
-    override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
-        holder.bind(characters[position])
+    override fun onBindViewHolder(holder: PersonajeViewHolder, position: Int) {
+        holder.bind(personajes[position])
     }
+
+
 }

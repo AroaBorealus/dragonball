@@ -1,10 +1,9 @@
 package com.aroaborealus.dragonball.presentation.login
 
 import android.content.SharedPreferences
-import androidx.activity.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aroaborealus.dragonball.presentation.home.HomeViewModel
+import com.aroaborealus.dragonball.data.repository.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,10 +16,12 @@ class LoginViewModel: ViewModel() {
     private val _uiState = MutableStateFlow<State>(State.Idle)
     val uiState: StateFlow<State> = _uiState
 
+    private val userRepository = UserRepository()
+
     sealed class State {
         data object Idle : State()
         data object Loading : State()
-        data class Success(val token: String) : State()
+        data object Success : State()
         data class Error(val message: String, val errorCode: Int) : State()
     }
 
@@ -29,7 +30,15 @@ class LoginViewModel: ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = State.Loading
             delay(2000L)
-            _uiState.value = State.Success("------ token ---------")
+            val loginResponse = userRepository.login(usuario, password)
+            when (loginResponse) {
+                is UserRepository.LoginResponse.Success -> {
+                    _uiState.value = State.Success
+                }
+                is UserRepository.LoginResponse.Error -> {
+                    _uiState.value = State.Error("Error con la contraseña o la conexión a internet", 401)
+                }
+            }
         }
     }
 
@@ -44,6 +53,7 @@ class LoginViewModel: ViewModel() {
         }
     }
 
-
-
+    // TODO mejoras.
+    //  Si el usuario ya ha hecho login, entonces no volverselo a pedir
+    //  Si el usuario le ha dado a recordar usuario y contraseña. Después mostrarlo
 }

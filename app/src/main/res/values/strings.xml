@@ -5,4 +5,6 @@
     <string name="insert_password">password</string>
     <string name="login">Login</string>
     <string name="remember_user">Remember me</string>
+    <string name="hit">Hit</string>
+    <string name="heal">Heal</string>
 </resources>
