@@ -35,22 +35,16 @@ class CharacterAdapter(
             binding.pbVida.max = personaje.vidaTotal
             binding.pbVida.progress = personaje.vidaActual
 
-            // Cambiar color de fondo si la vida está por debajo de 0
             if (personaje.vidaActual <= 0) {
-                // Cambiar el color de fondo a gris
                 binding.root.setBackgroundColor(binding.root.context.getColor(R.color.light_gray))
-                // Deshabilitar la selección
                 binding.root.isClickable = false
                 binding.root.isEnabled = false
             } else {
-                // Restaurar color de fondo
                 binding.root.setBackgroundColor(binding.root.context.getColor(R.color.light_orange))
-                // Habilitar la selección
                 binding.root.isClickable = true
                 binding.root.isEnabled = true
             }
 
-            // Manejo del click solo si está habilitado
             binding.root.setOnClickListener {
                 if (binding.root.isEnabled) {
                     onPersonajeClicked(personaje)
@@ -58,7 +52,6 @@ class CharacterAdapter(
             }
         }
     }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
         return CharacterViewHolder(
@@ -74,6 +67,4 @@ class CharacterAdapter(
     override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
         holder.bind(personajes[position])
     }
-
-
 }

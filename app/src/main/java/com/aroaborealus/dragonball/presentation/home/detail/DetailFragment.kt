@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import com.aroaborealus.dragonball.databinding.FragmentDetailBinding
 import com.aroaborealus.dragonball.presentation.home.HomeViewModel
 import com.aroaborealus.dragonball.model.Character
+import com.aroaborealus.dragonball.presentation.home.OpcionesJuego
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -41,6 +42,7 @@ class DetailFragment : Fragment() {
             bGolpear.setOnClickListener {
                 viewModel.golpearPersonaje(personaje, sharedPreferences)
                 pbVida.progress = personaje.vidaActual
+                checkAlive(personaje)
             }
             bCurar.setOnClickListener {
                 viewModel.curarPersonaje(personaje, sharedPreferences)
@@ -48,6 +50,15 @@ class DetailFragment : Fragment() {
             }
         }
     }
+
+    private fun checkAlive(personaje: Character) {
+        if (personaje.vidaActual <= 0) {
+            requireActivity().runOnUiThread {
+                (activity as? OpcionesJuego)?.irAlListado()
+            }
+        }
+    }
+
 
     private fun initObservers() {
         job = lifecycleScope.launch {

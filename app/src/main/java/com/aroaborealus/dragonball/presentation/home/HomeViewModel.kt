@@ -34,11 +34,15 @@ class HomeViewModel : ViewModel() {
 
     fun golpearPersonaje(personaje: Character, sharedPreferences: SharedPreferences) {
         personaje.vidaActual -= Random.nextInt(10,60)
+        if (personaje.vidaActual < 0) personaje.vidaActual = 0
         guardarEstadoPersonaje(sharedPreferences, personaje)
+
+        _uiState.value = State.PersonajeSeleccionado(personaje)
     }
 
     fun curarPersonaje(personaje: Character, sharedPreferences: SharedPreferences) {
-        personaje.vidaActual = personaje.vidaTotal
+        personaje.vidaActual += 20
+        if (personaje.vidaActual > 100) personaje.vidaActual = 100
         guardarEstadoPersonaje(sharedPreferences, personaje)
     }
 
