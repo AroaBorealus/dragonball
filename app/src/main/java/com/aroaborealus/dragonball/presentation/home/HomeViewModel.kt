@@ -46,6 +46,31 @@ class HomeViewModel : ViewModel() {
         guardarEstadoPersonaje(sharedPreferences, personaje)
     }
 
+    fun fullHeal(sharedPreferences: SharedPreferences) {
+        val estadoActual = _uiState.value
+        if (estadoActual is HomeViewModel.State.Success) {
+            // Actualizamos la lista de personajes con vida al 100
+            val personajesActualizados: List<Character> = estadoActual.personajes.map {
+                it.copy(vidaActual = 100) // Crea una copia con vida al 100
+            }
+
+            // Guardamos la lista actualizada en SharedPreferences
+            guardarEstadoPersonajes(sharedPreferences, personajesActualizados)
+
+            // Actualizamos el estado con la nueva lista de personajes
+            _uiState.value = HomeViewModel.State.Success(personajesActualizados)
+        }
+    }
+
+    private fun guardarEstadoPersonajes(sharedPreferences: SharedPreferences, personajes: List<Character>) {
+        // Convertimos la lista de personajes a JSON
+        val personajesJson = Gson().toJson(personajes)
+
+        // Guardamos el JSON en SharedPreferences
+        sharedPreferences.edit().putString("listaPersonajes", personajesJson).apply()
+    }
+
+
     //Si no lo guardaba despues de golpear o curar, tenía un comportamiento raro y erroneo
     private fun guardarEstadoPersonaje(sharedPreferences: SharedPreferences, personaje: Character) {
 

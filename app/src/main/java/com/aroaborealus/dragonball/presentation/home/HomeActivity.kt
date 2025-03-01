@@ -35,7 +35,13 @@ class HomeActivity: AppCompatActivity(),OpcionesJuego {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel.descargarPersonajes(getSharedPreferences("my_preferences", Context.MODE_PRIVATE))
+        val sharedPreferences = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+
+        binding.fabSetLifeToOne.setOnClickListener {
+            viewModel.fullHeal(sharedPreferences)
+        }
+
+        viewModel.descargarPersonajes(sharedPreferences)
         initFragments()
     }
 
@@ -52,9 +58,8 @@ class HomeActivity: AppCompatActivity(),OpcionesJuego {
     override fun irAlDetalle() {
         supportFragmentManager.beginTransaction().apply {
             replace(binding.flHome.id, DetailFragment())
-            addToBackStack(Random.nextInt().toString())
+            addToBackStack(null)
             commit()
         }
     }
-
 }

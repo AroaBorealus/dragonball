@@ -24,7 +24,4 @@
         tools:itemCount="10"
         tools:listitem="@layout/item_character"
         />
-
-
-
 </LinearLayout>
