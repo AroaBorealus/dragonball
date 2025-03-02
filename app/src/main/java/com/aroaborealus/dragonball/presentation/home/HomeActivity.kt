@@ -35,7 +35,7 @@ class HomeActivity: AppCompatActivity(),OpcionesJuego {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val sharedPreferences = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences("listaPersonajes", Context.MODE_PRIVATE)
 
         binding.fabSetLifeToOne.setOnClickListener {
             viewModel.fullHeal(sharedPreferences)

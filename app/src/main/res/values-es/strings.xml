@@ -8,4 +8,5 @@
     <string name="remember_user">Recuérdame</string>
     <string name="hit">Golpear</string>
     <string name="heal">Curar</string>
+    <string name="count">Contador</string>
 </resources>

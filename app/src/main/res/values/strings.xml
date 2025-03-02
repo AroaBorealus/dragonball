@@ -7,4 +7,5 @@
     <string name="remember_user">Remember me</string>
     <string name="hit">Hit</string>
     <string name="heal">Heal</string>
+    <string name="count">Selected counter</string>
 </resources>

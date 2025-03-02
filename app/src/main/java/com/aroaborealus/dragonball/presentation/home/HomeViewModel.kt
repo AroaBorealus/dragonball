@@ -1,6 +1,7 @@
 package com.aroaborealus.dragonball.presentation.home
 
 import android.content.SharedPreferences
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -72,7 +73,7 @@ class HomeViewModel : ViewModel() {
 
 
     //Si no lo guardaba despues de golpear o curar, tenía un comportamiento raro y erroneo
-    private fun guardarEstadoPersonaje(sharedPreferences: SharedPreferences, personaje: Character) {
+    fun guardarEstadoPersonaje(sharedPreferences: SharedPreferences, personaje: Character) {
 
         val listaPersonajesJson = sharedPreferences.getString("listaPersonajes", "")
         val personajes: ArrayList<Character> =
@@ -80,13 +81,14 @@ class HomeViewModel : ViewModel() {
 
         personajes?.find { it.id == personaje.id }?.let {
             it.vidaActual = personaje.vidaActual
+            it.vecesSeleccionado = personaje.vecesSeleccionado
         }
         sharedPreferences.edit().putString("listaPersonajes", Gson().toJson(personajes)).apply()
     }
 
 
     fun personajeSeleccionado(personaje: Character) {
-        personaje.vecesSeleccionado++
+        personaje.vecesSeleccionado++ //No ho guarda entre detail i detail
         _uiState.value = State.PersonajeSeleccionado(personaje)
     }
 

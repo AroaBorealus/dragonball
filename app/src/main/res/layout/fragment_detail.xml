@@ -3,35 +3,108 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/light_gray"
+    >
 
-    <TextView
-        android:id="@+id/tvNombre"
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"/>
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        tools:text="Nombre"/>
-    <ProgressBar
-        android:id="@+id/pbVida"
+        android:orientation="vertical"
+        android:background="@drawable/rounded_background"
+        android:layout_marginHorizontal="60dp">
+        <TextView
+            android:id="@+id/tvNombre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Hello World!"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:layout_gravity="center"/>
+        <ProgressBar
+            android:id="@+id/pbVida"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progressTint="@color/hp"
+            android:progressBackgroundTint="@color/black"
+            tools:progress="50"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="5dp"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+    </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivPhoto"
+            android:layout_width="250dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"/>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginHorizontal="20dp">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/bGolpear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/red"
+
+                android:text="@string/hit"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2" />
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/bCurar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/hp"
+                android:textColor="@color/black"
+                android:text="@string/heal"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:progressTint="@color/orange"
-        android:progressBackgroundTint="@color/black"
-        tools:progress="50"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
-
-    <Button
-        android:id="@+id/bGolpear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hit"/>
-
-    <Button
-        android:id="@+id/bCurar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/heal"/>
-
-
+        android:orientation="horizontal">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/bCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/orange"
+            android:textColor="@color/black"
+            android:text="@string/count"
+            android:layout_marginTop="10dp"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2" />
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4" />
 </LinearLayout>

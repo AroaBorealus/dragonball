@@ -15,7 +15,7 @@ import com.aroaborealus.dragonball.presentation.home.OpcionesJuego
 import kotlinx.coroutines.Job
 
 class ListFragment: Fragment() {
-    private val personajesAdapter = CharacterAdapter(
+    private val characterAdapter = CharacterAdapter(
         onPersonajeClicked = { personaje ->
             viewModel.personajeSeleccionado(personaje)
         }
@@ -38,7 +38,7 @@ class ListFragment: Fragment() {
 
     private fun initViews() {
         binding.rvPersonajes.layoutManager = LinearLayoutManager(this.context)
-        binding.rvPersonajes.adapter = personajesAdapter
+        binding.rvPersonajes.adapter = characterAdapter
     }
 
     private fun initObservers() {
@@ -50,7 +50,7 @@ class ListFragment: Fragment() {
                     }
                     is HomeViewModel.State.Success -> {
                         binding.pbLoading.visibility = View.GONE
-                        personajesAdapter.actualizarPersonajes(state.personajes)
+                        characterAdapter.actualizarPersonajes(state.personajes)
                     }
                     is HomeViewModel.State.Error -> {
                         binding.pbLoading.visibility = View.GONE

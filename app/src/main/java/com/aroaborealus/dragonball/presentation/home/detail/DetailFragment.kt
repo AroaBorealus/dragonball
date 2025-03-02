@@ -2,16 +2,20 @@ package com.aroaborealus.dragonball.presentation.home.detail
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import com.aroaborealus.dragonball.R
 import com.aroaborealus.dragonball.databinding.FragmentDetailBinding
 import com.aroaborealus.dragonball.presentation.home.HomeViewModel
 import com.aroaborealus.dragonball.model.Character
 import com.aroaborealus.dragonball.presentation.home.OpcionesJuego
+import com.bumptech.glide.Glide
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -29,7 +33,7 @@ class DetailFragment : Fragment() {
     ): View {
         binding = FragmentDetailBinding.inflate(inflater, container, false)
 
-        sharedPreferences = requireActivity().getSharedPreferences("app_preferences", 0)
+        sharedPreferences = requireActivity().getSharedPreferences("listaPersonajes", 0)
 
         initObservers()
         return binding.root
@@ -37,6 +41,12 @@ class DetailFragment : Fragment() {
 
     private fun initViews(personaje: Character) {
         with(binding) {
+            Glide
+                .with(binding.root)
+                .load(personaje.imagenUrl)
+                .centerInside()
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .into(binding.ivPhoto)
             tvNombre.text = personaje.nombre
             pbVida.progress = personaje.vidaActual
             bGolpear.setOnClickListener {
@@ -48,10 +58,15 @@ class DetailFragment : Fragment() {
                 viewModel.curarPersonaje(personaje, sharedPreferences)
                 pbVida.progress = personaje.vidaActual
             }
+            bCount.setOnClickListener {
+                Toast.makeText(requireContext(), "${personaje.vecesSeleccionado} veces pulsado", Toast.LENGTH_LONG).show()
+            }
         }
+        viewModel.guardarEstadoPersonaje(sharedPreferences,personaje)
     }
 
     private fun checkAlive(personaje: Character) {
+        Log.e("DetailFragment",personaje.vecesSeleccionado.toString())
         if (personaje.vidaActual <= 0) {
             requireActivity().runOnUiThread {
                 (activity as? OpcionesJuego)?.irAlListado()
