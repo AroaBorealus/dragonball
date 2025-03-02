@@ -112,7 +112,10 @@ class HomeViewModel : ViewModel() {
             val resultado = personajeRepository.fetchPersonajes(userRepository.getToken(), sharedPreferences)
             when (resultado) {
                 is CharacterRepository.PersonajesResponse.Success -> {
-                    _uiState.value = State.Success(resultado.personajes)
+                    val personajesActualizados: List<Character> = resultado.personajes.map {
+                        it.copy(vecesSeleccionado = 0)
+                    }
+                    _uiState.value = State.Success(personajesActualizados)
                 }
                 is CharacterRepository.PersonajesResponse.Error -> {
                     _uiState.value = State.Error(resultado.message)

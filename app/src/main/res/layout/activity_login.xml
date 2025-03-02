@@ -39,14 +39,16 @@
                 android:height="48dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/insert_user"/>
+                android:hint="@string/insert_user"
+                android:inputType="textEmailAddress"/>
 
             <EditText
                 android:id="@+id/etPassword"
                 android:height="48dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/insert_password"/>
+                android:hint="@string/insert_password"
+                android:inputType="textPassword"/>
 
             <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/cbRememberUser"
