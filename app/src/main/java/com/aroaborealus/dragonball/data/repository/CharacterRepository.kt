@@ -10,7 +10,9 @@ import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-class CharacterRepository {
+class CharacterRepository(private val isTesting: Boolean = false) {
+
+
 
     private val BASE_URL = "https://dragonball.keepcoding.education/api/"
     private var listaPersonajes = listOf<Character>()
@@ -20,20 +22,23 @@ class CharacterRepository {
         data class Error(val message: String) : PersonajesResponse()
     }
 
-    // Convertimos la función a suspend para usarla con corutinas
     suspend fun fetchPersonajes(token: String, sharedPreferences: SharedPreferences? = null): PersonajesResponse {
         if (listaPersonajes.isNotEmpty())
             return PersonajesResponse.Success(listaPersonajes)
 
-        // Intentamos cargar los personajes desde las SharedPreferences
-        sharedPreferences?.let {
-            val listaPersonajesJson = it.getString("listaPersonajes", "")
-            val personajes: Array<Character>? =
-                Gson().fromJson(listaPersonajesJson, Array<Character>::class.java)
-            if (!personajes.isNullOrEmpty()) return PersonajesResponse.Success(personajes.toList())
+        if(isTesting){
+            val characterList: List<Character> = listOf(Character("01","Goku","goku.com",100),
+                                                        Character("02","Vegeta","vegeta.com",100))
+            return PersonajesResponse.Success(characterList)
+        }else{
+            sharedPreferences?.let {
+                val listaPersonajesJson = it.getString("listaPersonajes", "")
+                val personajes: Array<Character>? =
+                    Gson().fromJson(listaPersonajesJson, Array<Character>::class.java)
+                if (!personajes.isNullOrEmpty()) return PersonajesResponse.Success(personajes.toList())
+            }
         }
 
-        // Ahora realizamos la llamada a la red en un hilo de fondo (Dispatchers.IO)
         return withContext(Dispatchers.IO) {
             val client = OkHttpClient()
             val url = "${BASE_URL}heros/all"
@@ -55,7 +60,6 @@ class CharacterRepository {
                 if (response.isSuccessful) {
                     val personajesDto: Array<CharacterDTO> =
                         Gson().fromJson(response.body?.string(), Array<CharacterDTO>::class.java)
-                    // Aquí hemos descargado la lista de personajes
 
                     listaPersonajes = personajesDto.map {
                         Character(
@@ -67,20 +71,16 @@ class CharacterRepository {
                         )
                     }
 
-                    // Guardamos la lista de personajes en las SharedPreferences
                     sharedPreferences?.edit()?.apply {
                         putString("listaPersonajes", Gson().toJson(listaPersonajes))
                         apply()
                     }
 
-                    // Devolvemos los personajes como éxito
                     PersonajesResponse.Success(listaPersonajes)
                 } else {
-                    // Si la respuesta no fue exitosa
                     PersonajesResponse.Error("Error al descargar los personajes. ${response.message}")
                 }
             } catch (e: Exception) {
-                // Manejo de cualquier error
                 PersonajesResponse.Error("Excepción al realizar la solicitud: ${e.localizedMessage}")
             }
         }

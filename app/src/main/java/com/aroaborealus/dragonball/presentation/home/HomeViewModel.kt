@@ -17,7 +17,7 @@ import com.google.gson.reflect.TypeToken
 import org.jetbrains.annotations.VisibleForTesting
 import kotlin.random.Random
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(private val isTesting: Boolean = false) : ViewModel() { //meter testingTrue
 
     sealed class State {
         data object Loading : State()
@@ -27,38 +27,39 @@ class HomeViewModel : ViewModel() {
     }
 
     private val _uiState = MutableStateFlow<State>(State.Loading)
-    private val personajeRepository = CharacterRepository()
+    private val personajeRepository = CharacterRepository(isTesting) //pasar testingTRue
     @VisibleForTesting
     val userRepository = UserRepository()
 
     val uiState: StateFlow<State> = _uiState.asStateFlow()
 
-    fun golpearPersonaje(personaje: Character, sharedPreferences: SharedPreferences) {
+    fun golpearPersonaje(personaje: Character, sharedPreferences: SharedPreferences?) {
         personaje.vidaActual -= Random.nextInt(10,60)
         if (personaje.vidaActual < 0) personaje.vidaActual = 0
-        guardarEstadoPersonaje(sharedPreferences, personaje)
+        if (sharedPreferences != null) {
+            guardarEstadoPersonaje(sharedPreferences, personaje)
+        }
 
         _uiState.value = State.PersonajeSeleccionado(personaje)
     }
 
-    fun curarPersonaje(personaje: Character, sharedPreferences: SharedPreferences) {
+    fun curarPersonaje(personaje: Character, sharedPreferences: SharedPreferences?) {
         personaje.vidaActual += 20
         if (personaje.vidaActual > 100) personaje.vidaActual = 100
-        guardarEstadoPersonaje(sharedPreferences, personaje)
+        if (sharedPreferences != null) {
+            guardarEstadoPersonaje(sharedPreferences, personaje)
+        }
     }
 
     fun fullHeal(sharedPreferences: SharedPreferences) {
         val estadoActual = _uiState.value
         if (estadoActual is HomeViewModel.State.Success) {
-            // Actualizamos la lista de personajes con vida al 100
             val personajesActualizados: List<Character> = estadoActual.personajes.map {
-                it.copy(vidaActual = 100) // Crea una copia con vida al 100
+                it.copy(vidaActual = 100)
             }
 
-            // Guardamos la lista actualizada en SharedPreferences
             guardarEstadoPersonajes(sharedPreferences, personajesActualizados)
 
-            // Actualizamos el estado con la nueva lista de personajes
             _uiState.value = HomeViewModel.State.Success(personajesActualizados)
         }
     }
@@ -88,11 +89,11 @@ class HomeViewModel : ViewModel() {
 
 
     fun personajeSeleccionado(personaje: Character) {
-        personaje.vecesSeleccionado++ //No ho guarda entre detail i detail
+        personaje.vecesSeleccionado++
         _uiState.value = State.PersonajeSeleccionado(personaje)
     }
 
-    fun personajeDeseleccionado(sharedPreferences: SharedPreferences) {
+    fun personajeDeseleccionado(sharedPreferences: SharedPreferences?) {
         viewModelScope.launch(Dispatchers.IO) {
             val resultado = personajeRepository.fetchPersonajes(userRepository.getToken(), sharedPreferences)
             when (resultado) {
@@ -105,6 +106,8 @@ class HomeViewModel : ViewModel() {
             }
         }
     }
+
+
 
     fun descargarPersonajes(sharedPreferences: SharedPreferences) {
         viewModelScope.launch(Dispatchers.IO) {

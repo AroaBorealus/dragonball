@@ -22,12 +22,6 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setObservers()
-        viewModel.guardarUsuario(
-            preferences = getSharedPreferences("LoginPreferences", MODE_PRIVATE),
-            usuario = "pepe",
-            password = "1234"
-        )
-        Toast.makeText(this, "App abierta correctamente", Toast.LENGTH_LONG).show()
 
         binding.bLogin.setOnClickListener {
             viewModel.iniciarLogin(
@@ -46,6 +40,11 @@ class LoginActivity : AppCompatActivity() {
                         binding.pbLoading.visibility = View.VISIBLE
                     }
                     is LoginViewModel.State.Success -> {
+                        viewModel.guardarUsuario(
+                            preferences = getSharedPreferences("LoginPreferences", MODE_PRIVATE),
+                            usuario = binding.etUser.text.toString(),
+                            password = binding.etPassword.text.toString()
+                        )
                         binding.pbLoading.visibility = View.INVISIBLE
                         startJuegoActivity()
                     }
