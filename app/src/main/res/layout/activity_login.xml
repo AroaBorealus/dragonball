@@ -49,12 +49,6 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/insert_password"
                 android:inputType="textPassword"/>
-
-            <androidx.appcompat.widget.AppCompatCheckBox
-                android:id="@+id/cbRememberUser"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/remember_user"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
     <View
